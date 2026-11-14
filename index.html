@@ -430,6 +430,27 @@
             if(lang === 'fa') msg = "زبان بازی به فارسی تغییر یافت.";
             alert(msg);
         }
-    </script>
+          // آرایه دشمنان زیبا، ترسناک و قدرتمند از سطح A تا S، پادشاه شیاطین و انسان‌های مزدور خائن
+        const enemiesList = [
+            { type: "demon", rank: "سطح A", name: "ملکه سایه‌های فریبنده", power: "افسون زیبایی مرگبار و کنترل ذهن تاریک", damage: 30, icon: "🧝‍♀️✨" },
+            { type: "demon", rank: "سطح B", name: "شوالیه خونین آتشین", power: "زره درخشان از آتش سیاه و شمشیر ابسیدین", damage: 25, icon: "🤺🔥" },
+            { type: "demon", rank: "سطح C", name: "روح کریستالی یخ‌زده", power: "بازتاب توهمی و انجماد روح در یک نگاه", damage: 20, icon: "💎❄️" },
+            { type: "demon", rank: "سطح D", name: "فرشته سقوط‌کرده بال‌سیاه", power: "زمزمه‌های وسوسه‌انگیز و مکیدن انرژی حیات", damage: 15, icon: "🖤🕊️" },
+            { type: "demon", rank: "سطح E", name: "سرباز توهمی نقاب‌دار", power: "ضربات پنهان از پشت نقاب‌های فریبنده", damage: 10, icon: "🎭🗡️" },
+            { type: "demon", rank: "سطح S", name: "شاهزاده بی‌نهایت تاریکی", power: "شکستن ابعاد زمان و طوفان ارتعاشی ارواح", damage: 45, icon: "👑🌌" },
+            { type: "demon", rank: "پادشاه شیاطین", name: "موارث، پادشاه مطلق و زیبای شیاطین آسوریا", power: "سقوط آسمان، زیبایی خیره‌کننده مرگبار و نابودی مطلق", damage: 60, icon: "👑🔥" },
+            { type: "human", rank: "مزدور خائن", name: "جنگجوی فریب‌خورده داخلی", power: "خیانت ناگهانی و حمله پنهانی از سایه‌ها", damage: 22, icon: "🦹‍♂️🗡️" },
+            { type: "human", rank: "عضو نفوذی مرتد", name: "خبرچین فروخته‌شده به دربار تاریکی", power: "افشای اسرار سنگر و ضربه غافلگیرانه", damage: 28, icon: "👤⚡" }
+        ];
+
+        let currentEnemy = null;
+
+        // تابع ظاهر کردن دشمن یا مزدور خائن به همراه شانس حمله پنهان (غافلگیری)
+        function spawnNewEnemy() {
+            const randomIndex = Math.floor(Math.random() * enemiesList.length);
+            currentEnemy = enemiesList[randomIndex];
+
+            // بررسی احتمال حمله
+  </script>
 </body>
 </html>
