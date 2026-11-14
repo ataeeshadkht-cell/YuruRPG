@@ -2,455 +2,411 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YuruRPG - دنیای حماسی آسوریا</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RPG Manhwa Game - پورتال مانیتور و ساخت کاراکتر</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Tahoma, sans-serif; }
-        body {
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('1000069541.jpg') no-repeat center center fixed;
-            background-size: cover;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            font-family: 'Tahoma', sans-serif;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: #0b0b13;
             color: #fff;
-            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* بخش سینمایی اول بازی: پشت کامپیوتر و دست سفید جادویی */
+        #intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #050508, #1a102f, #000);
             display: flex;
             flex-direction: column;
+            justify-content: center;
             align-items: center;
-            justify-content: flex-start;
-            padding: 15px;
-        }
-        .container {
-            width: 100%;
-            max-width: 900px;
-            background: rgba(15, 15, 25, 0.9);
-            border: 2px solid #d4af37;
-            border-radius: 15px;
+            z-index: 1000;
+            text-align: center;
             padding: 20px;
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.5);
-            backdrop-filter: blur(5px);
-            margin-top: 10px;
+            transition: opacity 1.5s ease;
         }
-        h1, h2 { text-align: center; color: #ffdf00; margin-bottom: 10px; text-shadow: 0 0 10px rgba(255,223,0,0.5); }
-        .btn {
-            background: linear-gradient(45deg, #d4af37, #aa820a);
+        .monitor-frame {
+            width: 260px;
+            height: 160px;
+            border: 6px solid #444;
+            border-radius: 10px;
+            background: #111;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            margin-bottom: 25px;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+        }
+        .gamer-silhouette {
+            font-size: 35px;
+            animation: gamerMove 2s infinite alternate;
+        }
+        @keyframes gamerMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-5px); }
+        }
+        /* افکت دست جادویی که از مانیتور بیرون میاد */
+        .magic-hand {
+            position: absolute;
+            font-size: 45px;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: 1s;
+        }
+        #intro-screen h1 {
+            font-size: 20px;
+            color: #ffd700;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        #intro-screen p {
+            font-size: 13px;
+            color: #ccc;
+            max-width: 380px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        .portal-btn {
+            background: linear-gradient(45deg, #b8860b, #ffd700);
             color: #000;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 30px;
             font-size: 15px;
             font-weight: bold;
-            border-radius: 8px;
+            border-radius: 30px;
             cursor: pointer;
-            transition: 0.3s;
-            margin: 5px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
         }
-        .btn:hover { transform: scale(1.05); background: linear-gradient(45deg, #ffdf00, #d4af37); }
-        .section { display: none; }
-        .active { display: block; }
-        
-        .mirror-studio {
+
+        /* لابی اصلی بازی (چرخان افقی سبک پابجی / موبایل لجندز) */
+        #game-lobby {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            background: radial-gradient(circle at center, #1b1b2f 0%, #0f0f1a 100%);
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .lobby-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(20, 20, 35, 0.8);
+            border: 1px solid #ffd700;
+            padding: 10px 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+        .lang-selector select {
+            background: #222;
+            color: #ffd700;
+            border: 1px solid #ffd700;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        /* استودیوی گریم و ساخت کاراکتر مانوا (پیش‌نمایش بصری میا استایل) */
+        .character-studio {
             display: flex;
             flex-direction: column;
             align-items: center;
-            background: rgba(0, 0, 0, 0.6);
-            border: 2px solid #ffdf00;
-            border-radius: 12px;
+            background: rgba(15, 15, 25, 0.9);
+            border: 2px solid #ffd700;
+            border-radius: 15px;
             padding: 15px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
         }
-        .avatar-preview {
-            width: 140px;
-            height: 160px;
-            border: 3px solid #d4af37;
-            border-radius: 10px;
-            background: linear-gradient(135deg, #2c2c54, #40407a);
+        .studio-title {
+            font-size: 15px;
+            color: #ffd700;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        /* آواتار زنده مانوا */
+        .manhwa-avatar-container {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 3px solid #ffd700;
+            background: linear-gradient(135deg, #2b1055, #7597de);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             position: relative;
-            box-shadow: 0 0 15px rgba(255, 223, 0, 0.4);
-            margin-bottom: 10px;
-        }
-        .customizer-controls {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .stats-box {
-            display: flex;
-            justify-content: space-around;
-            background: rgba(0,0,0,0.5);
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            border: 1px solid #d4af37;
-            font-size: 14px;
-        }
-        input, textarea {
-            width: 100%;
-            padding: 10px;
-            margin: 8px 0;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid #d4af37;
-            color: #fff;
-            border-radius: 5px;
-        }
-        textarea { resize: vertical; height: 80px; }
-        .realm-card {
-            background: rgba(25, 25, 40, 0.9);
-            border: 1px solid #555;
-            padding: 12px;
-            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(117, 151, 222, 0.5);
             margin-bottom: 12px;
         }
-        .locked { opacity: 0.5; filter: grayscale(80%); }
+        .avatar-hair { font-size: 24px; }
+        .avatar-eyes { font-size: 20px; margin: 2px 0; background: rgba(0,0,0,0.3); padding: 1px 8px; border-radius: 8px; }
+        .avatar-outfit { font-size: 10px; color: #ffdf00; background: rgba(0,0,0,0.6); padding: 2px 6px; border-radius: 4px; }
 
-        .lang-bar {
-            display: flex;
-            justify-content: center;
-            gap: 5px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
+        /* دکمه‌های کنترل ظاهر کاراکتر */
+        .customization-controls {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            width: 100%;
+            margin-bottom: 10px;
         }
-        .lang-btn {
-            background: rgba(255,255,255,0.2);
-            color: #fff;
-            border: 1px solid #d4af37;
-            padding: 5px 10px;
-            border-radius: 5px;
+        .custom-btn {
+            background: #2a2a40;
+            border: 1px solid #ffd700;
+            color: #ffd700;
+            padding: 8px;
+            font-size: 11px;
+            border-radius: 8px;
             cursor: pointer;
+            text-align: center;
+        }
+        .custom-btn:active { background: #ffd700; color: #000; }
+
+        .input-group {
+            width: 100%;
+            margin-bottom: 8px;
+        }
+        .input-group label {
+            font-size: 11px;
+            color: #aaa;
+            display: block;
+            margin-bottom: 3px;
+        }
+        .input-group input, .input-group select, .input-group textarea {
+            width: 100%;
+            background: #111;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 8px;
+            border-radius: 8px;
             font-size: 12px;
         }
-        .lang-btn:hover { background: #ffdf00; color: #000; }
+
+        /* مسافرخانه و ماموریت‌ها */
+        .tavern-section {
+            background: rgba(25, 20, 35, 0.9);
+            border: 1px solid #b8860b;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+        .tavern-title {
+            font-size: 13px;
+            color: #ffd700;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+        .mission-card {
+            background: #181824;
+            border-left: 4px solid #ff4500;
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            font-size: 11px;
+        }
+
+        .enter-world-btn {
+            width: 100%;
+            background: linear-gradient(45deg, #ff4500, #ff8c00);
+            color: #fff;
+            border: none;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255, 69, 0, 0.4);
+            margin-bottom: 30px;
+        }
     </style>
 </head>
 <body>
 
-    <audio id="lobbyMusic" loop src="Through the Gates.mp3"></audio>
-    <audio id="battleMusic" loop src="The Only Thing They Fear Is You.mp3"></audio>
-
-    <div class="container">
-        <div class="lang-bar">
-            <button class="lang-btn" onclick="setLang('fa')">فارسی</button>
-            <button class="lang-btn" onclick="setLang('zh')">中文 (چینی)</button>
-            <button class="lang-btn" onclick="setLang('en')">English (انگلیسی)</button>
-            <button class="lang-btn" onclick="setLang('ru')">RU</button>
-            <button class="lang-btn" onclick="setLang('fr')">FR</button>
-            <button class="lang-btn" onclick="setLang('ja')">日本語</button>
-            <button class="lang-btn" onclick="setLang('tr')">TR</button>
+    <!-- صفحه سینمایی: پشت کامپیوتر و دست سفید جادویی -->
+    <div id="intro-screen">
+        <div class="monitor-frame" id="monitorBox">
+            <div class="gamer-silhouette" id="gamerIcon">🧑‍💻</div>
+            <div class="magic-hand" id="magicHand">✋✨</div>
         </div>
-
-        <div id="setupScreen" class="section active">
-            <h1>استودیوی گریم و ساخت کاراکتر مان‌هوآ</h1>
-            <p style="text-align: center; margin-bottom: 8px; color: #ffdf00; font-size: 13px;">جلو آینه بایستید، مو، لنز چشم و لباس‌های هانفو یا انیمه‌ای را به صورت زنده امتحان کنید!</p>
-            
-            <div class="mirror-studio">
-                <div class="avatar-preview" id="avatarBox">
-                    <span id="prevHair" style="font-size: 22px;">🖤</span>
-                    <span id="prevEyes" style="font-size: 18px; margin: 4px 0;">🔵</span>
-                    <span id="prevOutfit" style="font-size: 12px; text-align: center; color: #ffdf00; margin-top: 4px;">هانفوی سلطنتی</span>
-                </div>
-                <p id="previewNameText" style="font-weight: bold; color: #fff; margin-top: 3px;">قهرمان</p>
-
-                <div class="customizer-controls">
-                    <button class="btn" onclick="changeHair()" style="font-size: 11px; padding: 5px 10px;">💇 تغییر مدل مو</button>
-                    <button class="btn" onclick="changeEyes()" style="font-size: 11px; padding: 5px 10px;">👁️ تغییر لنز</button>
-                    <button class="btn" onclick="changeOutfit()" style="font-size: 11px; padding: 5px 10px;">👘 تغییر لباس</button>
-                </div>
-            </div>
-
-            <label>نام کاراکتر:</label>
-            <input type="text" id="charNameInput" placeholder="نام قهرمان خود را وارد کنید..." oninput="updateName(this.value)">
-
-            <label style="color: #ffdf00; margin-top: 10px; display: block;">✒️ یادداشت‌های هنرمندانه و مان‌هوآ:</label>
-            <textarea id="artistNotesInput" placeholder="افکار، استایل یا حس‌وحال هنرمندانه کاراکتر را بنویسید..."></textarea>
-
-            <div style="text-align: center; margin-top: 15px;">
-                <button class="btn" onclick="startTeleportSequence()">تله‌پورت به دنیای بازی 🚀</button>
-            </div>
-        </div>
-
-        <div id="cinematicScreen" class="section">
-            <h2>سکانس تله‌پورت حماسی</h2>
-            <div style="text-align: center; margin: 20px 0; background: #000; padding: 25px; border-radius: 10px; border: 2px solid #ffdf00;">
-                <p style="color: #ffdf00; font-size: 18px; margin-bottom: 15px;">🌀 در حال خروج از دنیای واقعی و عبور از پورتال جادویی...</p>
-                <div style="font-size: 50px; animation: pulse 1s infinite;">🌌⚡🌀</div>
-                <p style="margin-top: 15px; color: #aaa;">ورود به قلمرو مه‌آلود آسوریا و مواجهه با ارتش شیاطین و مزدوران خائن...</p>
-            </div>
-        </div>
-
-        <div id="gameScreen" class="section">
-            <div class="stats-box">
-                <span id="displayName">نام: قهرمان</span>
-                <span id="displayScore">امتیاز مبارزه: 0</span>
-                <span id="displayGold">💰 پول: 200</span>
-                <span id="displayHP">❤️ سلامتی: 100%</span>
-            </div>
-
-            <h2>قلمروهای بازی</h2>
-
-            <div class="realm-card">
-                <h3>قلمرو اول: آسوریا (Asuria)</h3>
-                <p>سرزمین ماه کامل، شیاطین قدرتمند (رنک A تا S) و انسان‌های مزدور و خائنی که توسط شیاطین خریده شده‌اند.</p>
-                <button class="btn" onclick="enterRealm(1)">ورود به نبرد با شیاطین و مزدوران</button>
-            </div>
-
-            <div class="realm-card locked" id="realm2Card">
-                <h3>قلمرو دوم: اوروریا (Aururia)</h3>
-                <p>سرزمین تجارت و سلاح‌های افسانه‌ای. (قفل است - نیازمند پاکسازی آسوریا)</p>
-                <button class="btn" id="btnRealm2" onclick="enterRealm(2)" disabled>ورود به قلمرو اوروریا 🔒</button>
-            </div>
-
-            <div style="margin-top: 15px; display: flex; flex-wrap: wrap; justify-content: center;">
-                <button class="btn" onclick="openDiary()">📖 دفترچه خاطرات و وقایع</button>
-                <button class="btn" onclick="openTown('inn')">🏨 مسافرخانه و درمانگاه</button>
-                <button class="btn" onclick="openTransport('horse')">🐎 اسب سواری</button>
-                <button class="btn" onclick="openTransport('carriage')">🛒 کالسکه سلطنتی</button>
-            </div>
-        </div>
-
-        <div id="battleScreen" class="section">
-            <h2 id="battleTitle">میدان نبرد (شیاطین و مزدوران خائن)</h2>
-            <p id="battleDesc" style="text-align: center; margin: 10px 0;">تهدیدات جدید در راهند؛ هم شیاطین و هم افراد فروخته‌شده قصد نابودی گروه را دارند!</p>
-            
-            <div style="text-align: center; background: rgba(0,0,0,0.6); padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #d4af37;">
-                <span style="font-size: 35px;" id="enemyIcon">👹🦹‍♂️⚔️</span>
-                <p id="enemyInfoBox" style="font-size: 14px; color: #ffdf00; margin-top: 8px; font-weight: bold;">مخالف روبرو: در حال شناسایی...</p>
-                <p id="battleStatusMsg" style="font-size: 13px; color: #ccc; margin-top: 5px;">آماده دفاع از گروه باشید...</p>
-            </div>
-
-            <div style="text-align: center;">
-                <button class="btn" onclick="fightEnemy()">⚔️ حمله متقابل / مبارزه</button>
-                <button class="btn" onclick="useElixir()">🧪 مصرف اکسیر شفا</button>
-                <button class="btn" onclick="backToLobby()">بازگشت به لابی</button>
-            </div>
-        </div>
-
-        <div id="diaryScreen" class="section">
-            <h2>دفترچه خاطرات و وقایع</h2>
-            <textarea id="diaryInput" placeholder="ماجرای نبرد با شیاطین و مزدوران خائن را بنویسید..."></textarea>
-            <div style="text-align: center;">
-                <button class="btn" onclick="saveDiary()">ثبت در تاریخچه ✍️</button>
-                <button class="btn" onclick="backToLobby()">بازگشت به میدان</button>
-            </div>
-            <div id="diaryLog" style="margin-top: 12px; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 5px; max-height: 120px; overflow-y: auto;"></div>
-        </div>
+        <h1 id="introTitle">ورود به دنیای مانوا و شیاطین</h1>
+        <p id="introDesc">قهرمان پشت کامپیوتر غرق در بازی است... ناگهان مانیتور سفید می‌شود و دست جادویی او را به درون خود می‌بلعد!</p>
+        <button class="portal-btn" onclick="triggerTeleport()">شروع تله‌پورت به بازی ⚡</button>
     </div>
 
+    <!-- لابی اصلی بازی (پابجی استایل) -->
+    <div id="game-lobby">
+        <div class="lobby-header">
+            <span style="font-size: 13px; font-weight: bold; color: #ffd700;">لابی اصلی بازی (Manhwa World)</span>
+            <div class="lang-selector">
+                <select id="gameLang" onchange="changeLanguage()">
+                    <option value="fa">فارسی</option>
+                    <option value="en">English</option>
+                    <option value="tr">Türkçe</option>
+                    <option value="zh">中文</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- استودیوی ساخت کاراکتر زنده (مانوا استایل) -->
+        <div class="character-studio">
+            <div class="studio-title">✨ استودیوی گریم و ساخت کاراکتر (مانوا) ✨</div>
+            <p style="font-size: 10px; color: #aaa; margin-bottom: 8px; text-align: center;">جنسیت، مو، چشم و لباس کاراکتر را به صورت زنده تنظیم کنید:</p>
+            
+            <!-- پیش‌نمایش آواتار -->
+            <div class="manhwa-avatar-container">
+                <div class="avatar-hair" id="lblHair">💇‍♀️ موی نقره‌ای</div>
+                <div class="avatar-eyes" id="lblEyes">👁️ چشم کهکشانی</div>
+                <div class="avatar-outfit" id="lblOutfit">👘 لباس جنگجو</div>
+            </div>
+
+            <div class="customization-controls">
+                <button class="custom-btn" onclick="nextGender()">جنسیت: <span id="lblGender">پسر ⚔️</span></button>
+                <button class="custom-btn" onclick="nextHair()">تغییر مدل مو</button>
+                <button class="custom-btn" onclick="nextEyes()">تغییر چشم/لنز</button>
+                <button class="custom-btn" onclick="nextOutfit()">تغییر لباس مانوا</button>
+            </div>
+
+            <div class="input-group">
+                <label>نام قهرمان:</label>
+                <input type="text" id="heroNameInput" value="Yuyu" placeholder="نام خود را وارد کنید...">
+            </div>
+        </div>
+
+        <!-- مسافرخانه و ماموریت‌ها -->
+        <div class="tavern-section">
+            <div class="tavern-title">🏮 مسافرخانه مرکزی و ماموریت‌ها</div>
+            <div class="mission-card">
+                <strong>ماموریت فعال:</strong> مبارزه با مزدوران انسانی و شیاطین رتبه A تا S
+            </div>
+            <div class="mission-card" style="border-left-color: #ffd700;">
+                <strong>هدف نهایی:</strong> رویارویی با ارباب تاریکی (Demon King) و ارتقای سطح قدرت
+            </div>
+        </div>
+
+        <button class="enter-world-btn" onclick="enterGameWorld()">ورود به دنیای ماجراجویی 🚀</button>
+    </div>
+
+    <!-- صداها و موزیک‌ها -->
+    <audio id="teleportMusic" loop src="https://actions.google.com/sounds/v1/ambiences/wind_heavy.ogg"></audio>
+    <audio id="lobbyMusic" loop src="https://actions.google.com/sounds/v1/science_fiction/sci_fi_ambient_drone.ogg"></audio>
+
     <script>
-        let playerData = {
-            name: "قهرمان",
-            hp: 100,
-            gold: 200,
-            score: 0,
-            unlockedRealm2: false,
-            hairIndex: 0,
-            eyeIndex: 0,
-            outfitIndex: 0,
-            artistNotes: ""
-        };
+        const genders = ["پسر ⚔️", "دختر 🗡️"];
+        let genderIndex = 0;
 
-        const hairs = ["🖤 موی مشکی", "🤍 موی نقره‌ای", "🌸 موی بلند سنتی"];
-        const eyes = ["🔵 چشم آبی", "🟢 چشم سبز", "✨ چشم کهکشانی"];
-        const outfits = ["👘 هانفوی سلطنتی", "🌙 کیمونوی ماه", "🛡️ زره ماه سفید"];
+        const hairsMale = ["💇‍♂️ موی مشکی حماسی", "💇‍♂️ موی کوتاه طلایی", "💇‍♂️ موی نقره‌ای سفید"];
+        const hairsFemale = ["💇‍♀️ موی بلند نقره‌ای", "💇‍♀️ موی دم اسبی شیک", "💇‍♀️ موی بلند بنفش"];
+        
+        const eyesList = ["👁️ چشم کهکشانی", "👁️ چشم یاقوتی خشن", "👁️ چشم طوسی مه‌آلود", "👁️ چشم برق‌آسا"];
+        const outfitsMale = ["🛡️ زره شوالیه سایه‌ها", "👘 کیمونوی باستانی سامورایی", "👑 لباس سلطنتی امپراتوری"];
+        const outfitsFemale = ["👘 لباس جنگجوی مانوا", "🛡️ زره چرمی میا استایل", "👑 لباس ملکه تاریکی"];
 
-        // ترکیب شیاطین رنک‌بندی شده (از A تا S) همراه با انسان‌های خائن و مزدور خریده‌شده
-        const enemiesList = [
-            { type: "demon", rank: "رنک C", name: "شیطان سایه ضعیف", power: "نامرئی شدن موقت", damage: 15, icon: "👹" },
-            { type: "demon", rank: "رنک B", name: "دیو شاخ‌دار آتشین", power: "پرتاب شهاب‌سنگ آتشین", damage: 25, icon: "🔥" },
-            { type: "demon", rank: "رنک A", name: "روح خبیث مهیب", power: "کنترل ذهن و توهم تاریک", damage: 35, icon: "👻" },
-            { type: "demon", rank: "رنک S", name: "پادشاه شیاطین ماورایی", power: "سقوط سیاه‌چاله و تسخیر ارواح", damage: 50, icon: "👑" },
-            { type: "human", rank: "مزدور خائن", name: "خبرچین فروخته‌شده به شیاطین", power: "خنجر زدن از پشت و افشای اسرار گروه", damage: 20, icon: "🦹‍♂️" },
-            { type: "human", rank: "عضو نفوذی فریب‌خورده", name: "جنگجوی مرتد خریده‌شده", power: "تخریب سنگرها و ضربه فنی ناگهانی", damage: 30, icon: "🗡️" }
-        ];
+        let hairIdx = 0;
+        let eyesIdx = 0;
+        let outfitIdx = 0;
 
-        let currentEnemy = null;
-
-        function updateAvatarPreview() {
-            document.getElementById("prevHair").innerText = hairs[playerData.hairIndex].split(" ")[0];
-            document.getElementById("prevEyes").innerText = eyes[playerData.eyeIndex].split(" ")[0];
-            document.getElementById("prevOutfit").innerText = outfits[playerData.outfitIndex];
+        function nextGender() {
+            genderIndex = (genderIndex + 1) % genders.length;
+            document.getElementById('lblGender').innerText = genders[genderIndex];
+            updateAvatarDisplay();
         }
 
-        function changeHair() {
-            playerData.hairIndex = (playerData.hairIndex + 1) % hairs.length;
-            updateAvatarPreview();
+        function nextHair() {
+            let list = genderIndex === 0 ? hairsMale : hairsFemale;
+            hairIdx = (hairIdx + 1) % list.length;
+            document.getElementById('lblHair').innerText = list[hairIdx];
         }
 
-        function changeEyes() {
-            playerData.eyeIndex = (playerData.eyeIndex + 1) % eyes.length;
-            updateAvatarPreview();
+        function nextEyes() {
+            eyesIdx = (eyesIdx + 1) % eyesList.length;
+            document.getElementById('lblEyes').innerText = eyesList[eyesIdx];
         }
 
-        function changeOutfit() {
-            playerData.outfitIndex = (playerData.outfitIndex + 1) % outfits.length;
-            updateAvatarPreview();
+        function nextOutfit() {
+            let list = genderIndex === 0 ? outfitsMale : outfitsFemale;
+            outfitIdx = (outfitIdx + 1) % list.length;
+            document.getElementById('lblOutfit').innerText = list[outfitIdx];
         }
 
-        function updateName(val) {
-            if(val) {
-                playerData.name = val;
-                document.getElementById("previewNameText").innerText = val;
-                document.getElementById("displayName").innerText = "نام: " + val;
-            }
-        }
-
-        const lobbyMusic = document.getElementById("lobbyMusic");
-        const battleMusic = document.getElementById("battleMusic");
-
-        function startTeleportSequence() {
-            const notes = document.getElementById("artistNotesInput").value;
-            if(notes) playerData.artistNotes = notes;
-
-            document.getElementById("setupScreen").classList.remove("active");
-            document.getElementById("cinematicScreen").classList.add("active");
-
-            lobbyMusic.play().catch(e => console.log("Audio restriction"));
-
-            setTimeout(() => {
-                document.getElementById("cinematicScreen").classList.remove("active");
-                document.getElementById("gameScreen").classList.add("active");
-            }, 3500);
-        }
-
-        function enterRealm(realmNum) {
-            if(playerData.hp <= 0) {
-                alert("شما بی‌هوش هستید! ابتدا در درمانگاه مسافرخانه استراحت کنید.");
-                return;
-            }
-
-            lobbyMusic.pause();
-            battleMusic.play().catch(e => console.log("Audio restriction"));
-
-            document.getElementById("gameScreen").classList.remove("active");
-            document.getElementById("battleScreen").classList.add("active");
-
-            spawnNewEnemy();
-        }
-
-        function spawnNewEnemy() {
-            const randomIndex = Math.floor(Math.random() * enemiesList.length);
-            currentEnemy = enemiesList[randomIndex];
-
-            document.getElementById("enemyIcon").innerText = currentEnemy.icon;
-            document.getElementById("enemyInfoBox").innerHTML = 
-                `مخالف: ${currentEnemy.name} | رنک/نوع: <span style="color:#ff4d4d;">${currentEnemy.rank}</span><br>⚡ توانایی ویژه: ${currentEnemy.power}`;
-            document.getElementById("battleStatusMsg").innerText = "مخالف به گروه حمله کرده است، دفاع کنید!";
-        }
-
-        function fightEnemy() {
-            if(!currentEnemy) spawnNewEnemy();
-
-            playerData.hp -= currentEnemy.damage;
-            if(playerData.hp < 0) playerData.hp = 0;
-
-            document.getElementById("displayHP").innerText = "❤️ سلامتی: " + playerData.hp + "%";
-
-            if(playerData.hp === 0) {
-                battleMusic.pause();
-                lobbyMusic.play().catch(e => {});
-                alert(`⚠️ ضربه سنگین از سوی ${currentEnemy.name} (${currentEnemy.power}) شما را از پا درآورد! بازگشت به لابی...`);
-                playerData.hp = 100;
-                document.getElementById("displayHP").innerText = "❤️ سلامتی: 100%";
-                backToLobby();
-                return;
-            }
-
-            playerData.score += 45;
-            playerData.gold += 35;
-            document.getElementById("displayScore").innerText = "امتیاز مبارزه: " + playerData.score;
-            document.getElementById("displayGold").innerText = "💰 پول: " + playerData.gold;
-
-            document.getElementById("battleStatusMsg").innerText = `⚔️ شما ${currentEnemy.name} را شکست دادید و نقشه خائنان را خنثی کردید!`;
-
-            if(playerData.score >= 500 && !playerData.unlockedRealm2) {
-                playerData.unlockedRealm2 = true;
-                document.getElementById("realm2Card").classList.remove("locked");
-                document.getElementById("btnRealm2").removeAttribute("disabled");
-                document.getElementById("btnRealm2").innerText = "ورود به قلمرو اوروریا 🔓";
-                alert("🎉 شاهکار بزرگ! با پاکسازی آسوریا از شیاطین و مزدوران، قلمرو دوم (اوروریا) باز شد!");
-            }
-
-            setTimeout(spawnNewEnemy, 1500);
-        }
-
-        function useElixir() {
-            if(playerData.gold >= 30) {
-                playerData.gold -= 30;
-                playerData.hp = 100;
-                document.getElementById("displayHP").innerText = "❤️ سلامتی: 100%";
-                document.getElementById("displayGold").innerText = "💰 پول: " + playerData.gold;
-                alert("🧪 اکسیر شفا مصرف شد و سلامت کامل بازگشت.");
+        function updateAvatarDisplay() {
+            if(genderIndex === 0) {
+                document.getElementById('lblHair').innerText = hairsMale[0];
+                document.getElementById('lblOutfit').innerText = outfitsMale[0];
             } else {
-                alert("پول کافی ندارید!");
+                document.getElementById('lblHair').innerText = hairsFemale[0];
+                document.getElementById('lblOutfit').innerText = outfitsFemale[0];
             }
         }
 
-        function openTown(type) {
-            if(type === 'inn') {
-                playerData.hp = 100;
-                playerData.gold = Math.max(0, playerData.gold - 25);
-                document.getElementById("displayHP").innerText = "❤️ سلامتی: 100%";
-                document.getElementById("displayGold").innerText = "💰 پول: " + playerData.gold;
-                alert("🏨 در مسافرخانه استراحت کردید و زخم‌ها درمان شدند.");
+        function triggerTeleport() {
+            const monitor = document.getElementById('monitorBox');
+            const hand = document.getElementById('magicHand');
+            const title = document.getElementById('introTitle');
+            const desc = document.getElementById('introDesc');
+
+            // انیمیشن ظاهر شدن دست سفید از مانیتور
+            monitor.style.borderColor = '#fff';
+            monitor.style.boxShadow = '0 0 50px #fff';
+            hand.style.opacity = '1';
+            hand.style.transform = 'scale(1.2)';
+            title.innerText = "پورتال فعال شد! در حال بلعیده شدن توسط بازی...";
+            desc.innerText = "دست جادویی شخصیت اصلی را به درون جهان مانیتور کشید...";
+
+            // پخش موزیک تله‌پورت
+            const tMusic = document.getElementById('teleportMusic');
+            tMusic.play().catch(e => {});
+
+            // ورود به لابی بعد از ۲ ثانیه انیمیشن
+            setTimeout(() => {
+                const intro = document.getElementById('intro-screen');
+                intro.style.opacity = '0';
+                setTimeout(() => {
+                    intro.style.display = 'none';
+                    document.getElementById('game-lobby').style.display = 'flex';
+                    tMusic.pause();
+                    document.getElementById('lobbyMusic').play().catch(e => {});
+                }, 1000);
+            }, 2200);
+        }
+
+        function enterGameWorld() {
+            const name = document.getElementById('heroNameInput').value || "قهرمان";
+            alert(`ورود به دنیای بازی موفقیت‌آمیز بود!\n\nسلام ${name}! اکنون آماده مبارزه با شیاطین و ماموریت‌های مسافرخانه هستید. ⚔️🔥`);
+        }
+
+        function changeLanguage() {
+            const lang = document.getElementById('gameLang').value;
+            if(lang === 'en') {
+                document.querySelector('.studio-title').innerText = "✨ Manhwa Character Customization Studio ✨";
+                document.querySelector('.enter-world-btn').innerText = "Enter Game World 🚀";
+            } else if(lang === 'tr') {
+                document.querySelector('.studio-title').innerText = "✨ Manhwa Karakter Tasarım Stüdyosu ✨";
+                document.querySelector('.enter-world-btn').innerText = "Oyun Dünyasına Gir 🚀";
+            } else {
+                document.querySelector('.studio-title').innerText = "✨ استودیوی گریم و ساخت کاراکتر (مانوا) ✨";
+                document.querySelector('.enter-world-btn').innerText = "ورود به دنیای ماجراجویی 🚀";
             }
         }
-
-        function openTransport(mode) {
-            if(mode === 'horse') alert("سوار بر اسب در دشت‌ها جابجا شدید!");
-            else if(mode === 'carriage') alert("کالسکه سلطنتی آماده حرکت است.");
-        }
-
-        function openDiary() {
-            document.getElementById("gameScreen").classList.remove("active");
-            document.getElementById("diaryScreen").classList.add("active");
-        }
-
-        function saveDiary() {
-            const text = document.getElementById("diaryInput").value;
-            if(text) {
-                document.getElementById("diaryLog").innerHTML += `<p>• ${text}</p>`;
-                document.getElementById("diaryInput").value = "";
-                alert("خاطره شما ثبت شد!");
-            }
-        }
-
-        function backToLobby() {
-            battleMusic.pause();
-            lobbyMusic.play().catch(e => {});
-            document.getElementById("battleScreen").classList.remove("active");
-            document.getElementById("diaryScreen").classList.remove("active");
-            document.getElementById("gameScreen").classList.add("active");
-        }
-
-        function setLang(lang) {
-            let msg = "Language changed.";
-            if(lang === 'fa') msg = "زبان بازی به فارسی تغییر یافت.";
-            alert(msg);
-        }
-          // آرایه دشمنان زیبا، ترسناک و قدرتمند از سطح A تا S، پادشاه شیاطین و انسان‌های مزدور خائن
-        const enemiesList = [
-            { type: "demon", rank: "سطح A", name: "ملکه سایه‌های فریبنده", power: "افسون زیبایی مرگبار و کنترل ذهن تاریک", damage: 30, icon: "🧝‍♀️✨" },
-            { type: "demon", rank: "سطح B", name: "شوالیه خونین آتشین", power: "زره درخشان از آتش سیاه و شمشیر ابسیدین", damage: 25, icon: "🤺🔥" },
-            { type: "demon", rank: "سطح C", name: "روح کریستالی یخ‌زده", power: "بازتاب توهمی و انجماد روح در یک نگاه", damage: 20, icon: "💎❄️" },
-            { type: "demon", rank: "سطح D", name: "فرشته سقوط‌کرده بال‌سیاه", power: "زمزمه‌های وسوسه‌انگیز و مکیدن انرژی حیات", damage: 15, icon: "🖤🕊️" },
-            { type: "demon", rank: "سطح E", name: "سرباز توهمی نقاب‌دار", power: "ضربات پنهان از پشت نقاب‌های فریبنده", damage: 10, icon: "🎭🗡️" },
-            { type: "demon", rank: "سطح S", name: "شاهزاده بی‌نهایت تاریکی", power: "شکستن ابعاد زمان و طوفان ارتعاشی ارواح", damage: 45, icon: "👑🌌" },
-            { type: "demon", rank: "پادشاه شیاطین", name: "موارث، پادشاه مطلق و زیبای شیاطین آسوریا", power: "سقوط آسمان، زیبایی خیره‌کننده مرگبار و نابودی مطلق", damage: 60, icon: "👑🔥" },
-            { type: "human", rank: "مزدور خائن", name: "جنگجوی فریب‌خورده داخلی", power: "خیانت ناگهانی و حمله پنهانی از سایه‌ها", damage: 22, icon: "🦹‍♂️🗡️" },
-            { type: "human", rank: "عضو نفوذی مرتد", name: "خبرچین فروخته‌شده به دربار تاریکی", power: "افشای اسرار سنگر و ضربه غافلگیرانه", damage: 28, icon: "👤⚡" }
-        ];
-
-        let currentEnemy = null;
-
-        // تابع ظاهر کردن دشمن یا مزدور خائن به همراه شانس حمله پنهان (غافلگیری)
-        function spawnNewEnemy() {
-            const randomIndex = Math.floor(Math.random() * enemiesList.length);
-            currentEnemy = enemiesList[randomIndex];
-
-            // بررسی احتمال حمله
-  </script>
+    </script>
 </body>
 </html>
