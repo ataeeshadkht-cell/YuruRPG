@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YuruRPG - دنیای حماسی آسوریا</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Tahoma, sans-serif; }
+        body {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('1000069541.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 15px;
+        }
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(15, 15, 25, 0.9);
+            border: 2px solid #d4af37;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.5);
+            backdrop-filter: blur(5px);
+            margin-top: 10px;
+        }
+        h1, h2 { text-align: center; color: #ffdf00; margin-bottom: 10px; text-shadow: 0 0 10px rgba(255,223,0,0.5); }
+        .btn {
+            background: linear-gradient(45deg, #d4af37, #aa820a);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin: 5px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .btn:hover { transform: scale(1.05); background: linear-gradient(45deg, #ffdf00, #d4af37); }
+        .section { display: none; }
+        .active { display: block; }
+        
+        /* استودیوی آینه و ساخت کاراکتر به سبک مان‌هوآ */
+        .mirror-studio {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #ffdf00;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .avatar-preview {
+            width: 140px;
+            height: 160px;
+            border: 3px solid #d4af37;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #2c2c54, #40407a);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 0 15px rgba(255, 223, 0, 0.4);
+            margin-bottom: 10px;
+        }
+        .customizer-controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .stats-box {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(0,0,0,0.5);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #d4af37;
+            font-size: 14px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid #d4af37;
+            color: #fff;
+            border-radius: 5px;
+        }
+        textarea { resize: vertical; height: 80px; }
+        .realm-card {
+            background: rgba(25, 25, 40, 0.9);
+            border: 1px solid #555;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+        .locked { opacity: 0.5; filter: grayscale(80%); }
+
+        /* نوار زبان‌ها شامل چینی و انگلیسی */
+        .lang-bar {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .lang-btn {
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+            border: 1px solid #d4af37;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .lang-btn:hover { background: #ffdf00; color: #000; }
+    </style>
+</head>
+<body>
+
+    <!-- موزیک‌های اختصاصی ارسالی شما -->
+    <audio id="lobbyMusic" loop src="Through the Gates.mp3"></audio>
+    <audio id="battleMusic" loop src="The Only Thing They Fear Is You.mp3"></audio>
+
+    <div class="container">
+        <!-- نوار انتخاب زبان (شامل چینی و انگلیسی) -->
+        <div class="lang-bar">
+            <button class="lang-btn" onclick="setLang('fa')">فارسی</button>
+            <button class="lang-btn" onclick="setLang('zh')">中文 (چینی)</button>
+            <button class="lang-btn" onclick="setLang('en')">English (انگلیسی)</button>
+            <button class="lang-btn" onclick="setLang('ru')">RU</button>
+            <button class="lang-btn" onclick="setLang('fr')">FR</button>
+            <button class="lang-btn" onclick="setLang('ja')">日本語</button>
+            <button class="lang-btn" onclick="setLang('tr')">TR</button>
+        </div>
+
+        <!-- استودیوی آینه و ساخت کاراکتر مان‌هوآ -->
+        <div id="setupScreen" class="section active">
+            <h1>استودیوی گریم و ساخت کاراکتر مان‌هوآ</h1>
+            <p style="text-align: center; margin-bottom: 8px; color: #ffdf00; font-size: 13px;">جلو آینه بایستید، مو، لنز چشم و لباس‌های هانفو یا انیمه‌ای را به صورت زنده امتحان کنید!</p>
+            
+            <div class="mirror-studio">
+                <div class="avatar-preview" id="avatarBox">
+                    <span id="prevHair" style="font-size: 22px;">🖤</span>
+                    <span id="prevEyes" style="font-size: 18px; margin: 4px 0;">🔵</span>
+                    <span id="prevOutfit" style="font-size: 12px; text-align: center; color: #ffdf00; margin-top: 4px;">هانفوی سلطنتی</span>
+                </div>
+                <p id="previewNameText" style="font-weight: bold; color: #fff; margin-top: 3px;">قهرمان</p>
+
+                <div class="customizer-controls">
+                    <button class="btn" onclick="changeHair()" style="font-size: 11px; padding: 5px 10px;">💇 تغییر مدل مو</button>
+                    <button class="btn" onclick="changeEyes()" style="font-size: 11px; padding: 5px 10px;">👁️ تغییر لنز</button>
+                    <button class="btn" onclick="changeOutfit()" style="font-size: 11px; padding: 5px 10px;">👘 تغییر لباس</button>
+                </div>
+            </div>
+
+            <label>نام کاراکتر:</label>
+            <input type="text" id="charNameInput" placeholder="نام قهرمان خود را وارد کنید..." oninput="updateName(this.value)">
+
+            <label style="color: #ffdf00; margin-top: 10px; display: block;">✒️ یادداشت‌های هنرمندانه و مان‌هوآ:</label>
+            <textarea id="artistNotesInput" placeholder="افکار، استایل یا حس‌وحال هنرمندانه کاراکتر را بنویسید..."></textarea>
+
+            <div style="text-align: center; margin-top: 15px;">
+                <button class="btn" onclick="startTeleportSequence()">تله‌پورت به دنیای بازی 🚀</button>
+            </div>
+        </div>
+
+        <!-- سکانس ویدیویی تله‌پورت از دنیای اصلی به دنیای بازی -->
+        <div id="cinematicScreen" class="section">
+            <h2>سکانس تله‌پورت حماسی</h2>
+            <div style="text-align: center; margin: 20px 0; background: #000; padding: 25px; border-radius: 10px; border: 2px solid #ffdf00;">
+                <p style="color: #ffdf00; font-size: 18px; margin-bottom: 15px;">🌀 در حال خروج از دنیای واقعی و عبور از پورتال جادویی...</p>
+                <div style="font-size: 50px; animation: pulse 1
